@@ -1,4 +1,5 @@
 import Form from 'next/form'
+import Link from 'next/link'
 import { loginUser } from './actions'
 
 export default function Login() {
@@ -37,6 +38,12 @@ export default function Login() {
       <button className='bg-primary text-foreground py-2 rounded-md'>
         Login
       </button>
+      <p>
+        {`Don't have an account? `}{' '}
+        <Link className='text-primary hover:underline' href={`/register`}>
+          Create an account.
+        </Link>
+      </p>
     </Form>
   )
 }

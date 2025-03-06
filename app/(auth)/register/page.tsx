@@ -1,4 +1,5 @@
 import Form from 'next/form'
+import Link from 'next/link'
 import { createUser } from './actions'
 
 export default function Register() {
@@ -95,6 +96,12 @@ export default function Register() {
       >
         Register
       </button>
+      <p>
+        {`Already have an account? `}{' '}
+        <Link className='text-primary hover:underline' href={`/login`}>
+          Sign In.
+        </Link>
+      </p>
     </Form>
   )
 }
