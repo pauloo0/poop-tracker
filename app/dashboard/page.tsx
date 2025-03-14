@@ -1,9 +1,6 @@
-import Navbar from '../components/Navbar'
-
 export default function Dashboard() {
   return (
     <>
-      <Navbar active='home' />
       <main className='mt-12 p-6'>
         <h1 className='text-xl'>
           Hello, <span className='font-bold'>Paulo</span>
