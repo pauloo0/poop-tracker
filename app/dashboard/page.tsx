@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Dashboard() {
   return (
     <>
@@ -32,7 +34,16 @@ export default function Dashboard() {
           </div>
         </section>
 
-        <section id='leaderboard'>
+        <section className='grid place-items-center'>
+          <Link
+            href='/new-poop'
+            className='rounded-xl w-full sm:w-48 transition-transform flex items-center justify-center bg-primary text-foreground gap-2 hover:scale-105 text-base h-10 sm:h-12 px-4 sm:px-5'
+          >
+            Record a poo!
+          </Link>
+        </section>
+
+        <section id='leaderboard' className='mt-8'>
           <h2 className='text-lg font-bold mb-1'>Leaderboard</h2>
           <ul>
             <li className='flex flex-row items-center justify-between text-2xl border-b-2 border-b-primary p-2'>
