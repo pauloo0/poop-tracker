@@ -1,30 +1,34 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 function Navbar({ active }: { active: string }) {
-  const activeClass = 'text-highlight font-bold text-lg'
-
   return (
-    <nav className='fixed inset-x-0 bg-primary bottom-0 z-10 flex items-center justify-around py-4 px-2'>
-      <Link className={active === 'home' ? activeClass : ''} href='/dashboard'>
-        Home
+    <nav className='fixed inset-x-0 bg-gradient-to-b from-yellow-900 to-amber-900 bottom-0 z-10 flex items-center justify-around py-4 px-2'>
+      <Link href='/dashboard'>
+        <Image
+          src={`/${active === 'home' ? 'home-filled.svg' : 'home.svg'}`}
+          alt='Home'
+          width={30}
+          height={30}
+        />
       </Link>
-      <Link
-        className={active === 'leaderboard' ? activeClass : ''}
-        href='/leaderboard'
-      >
-        Leaders
+      <Link href='/logs'>
+        <Image
+          src={`/${active === 'logs' ? 'logs-filled.svg' : 'logs.svg'}`}
+          alt='Logs'
+          width={30}
+          height={30}
+        />
       </Link>
-      <Link
-        className={active === 'new-poop' ? activeClass : ''}
-        href='/new-poop'
-      >
-        New Poop
-      </Link>
-      <Link className={active === 'logs' ? activeClass : ''} href='/logs'>
-        Logs
-      </Link>
-      <Link className={active === 'profile' ? activeClass : ''} href='/profile'>
-        Profile
+      <Link href='/profile'>
+        <Image
+          src={`/${
+            active === 'profile' ? 'profile-filled.svg' : 'profile.svg'
+          }`}
+          alt='Profile'
+          width={30}
+          height={30}
+        />
       </Link>
     </nav>
   )
