@@ -1,4 +1,6 @@
-import Link from 'next/link'
+'use client'
+
+import { redirect } from 'next/navigation'
 import { Pencil } from 'lucide-react'
 
 export default function Logs() {
@@ -59,33 +61,33 @@ export default function Logs() {
               <div className='flex flex-row items-center gap-4'>
                 2025-01-01 @ 12:30
               </div>
-              <Link href='#'>
+              <button onClick={() => redirect('/edit-poop/' + '123')}>
                 <Pencil className='h-5 w-5' />
-              </Link>
+              </button>
             </li>
             <li className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'>
               <div className='flex flex-row items-center gap-4'>
                 2025-01-02 @ 11:32
               </div>
-              <Link href='#'>
+              <button onClick={() => redirect('/edit-poop/' + '456')}>
                 <Pencil className='h-5 w-5' />
-              </Link>
+              </button>
             </li>
             <li className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'>
               <div className='flex flex-row items-center gap-4'>
                 2025-01-03 @ 16:46
               </div>
-              <Link href='#'>
+              <button onClick={() => redirect('/edit-poop/' + '789')}>
                 <Pencil className='h-5 w-5' />
-              </Link>
+              </button>
             </li>
             <li className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'>
               <div className='flex flex-row items-center gap-4'>
                 2025-01-04 @ 12:59
               </div>
-              <Link href='#'>
+              <button onClick={() => redirect('/edit-poop/' + '321')}>
                 <Pencil className='h-5 w-5' />
-              </Link>
+              </button>
             </li>
           </ul>
         </section>
