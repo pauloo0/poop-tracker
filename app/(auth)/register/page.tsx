@@ -7,15 +7,14 @@ import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 
 import { createUserEmailPassword } from './actions'
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { signInWithPopup } from 'firebase/auth'
 import { auth } from '@/app/lib/firebase'
+import { googleProvider } from '@/app/lib/firebase'
 import { completeUserRegistration } from './actions'
 
 async function createUserGoogle() {
-  const provider = new GoogleAuthProvider()
-
   try {
-    const userCredential = await signInWithPopup(auth, provider)
+    const userCredential = await signInWithPopup(auth, googleProvider)
     const user = userCredential.user
 
     const userData = {
@@ -26,10 +25,8 @@ async function createUserGoogle() {
       createdAt: new Date().toISOString(),
     }
 
-    console.log('Google user signed in: ', user.uid)
     await completeUserRegistration(userData)
   } catch (error) {
-    console.error('Google Sing-Up error: ', error)
     throw error
   }
 }
