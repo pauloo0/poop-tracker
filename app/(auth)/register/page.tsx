@@ -82,7 +82,7 @@ export default function Register() {
           Confirm Password
         </label>
         <input
-          type='confirm_password'
+          type='password'
           id='confirm_password'
           name='confirm_password'
           placeholder='Confirm Password'
