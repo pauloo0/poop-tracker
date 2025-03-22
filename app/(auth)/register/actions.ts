@@ -7,9 +7,7 @@ import { doc, setDoc } from 'firebase/firestore'
 
 export async function completeUserRegistration(user: User) {
   try {
-    console.log('Completing registration for user: ', user.id)
     await setDoc(doc(db, 'users', user.id), user, { merge: true })
-    console.log('Firestore registration completed for user: ', user.id)
   } catch (error) {
     console.error('Error in completeUserRegistration', error)
     throw new Error('Failed to complete user registration.')
@@ -32,14 +30,12 @@ export async function createUserEmailPassword(formData: FormData) {
   }
 
   try {
-    console.log('Strating email sign-up for: ', newUser.email)
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       newUser.email,
       newUser.password
     )
     const user = userCredential.user
-    console.log('Auth user created: ', user.uid)
 
     const userData = {
       id: user.uid,
