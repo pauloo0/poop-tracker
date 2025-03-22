@@ -1,7 +1,23 @@
+'use client'
+
 import { Pencil } from 'lucide-react'
 import Link from 'next/link'
+import { signOut } from 'firebase/auth'
+import { auth } from '@/app/lib/firebase'
+import { useRouter } from 'next/navigation'
 
 export default function Profile() {
+  const router = useRouter()
+
+  const handleLogOut = async () => {
+    try {
+      await signOut(auth)
+      router.push('/')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <>
       <main className='p-6'>
@@ -41,12 +57,13 @@ export default function Profile() {
           </Link>
         </section>
 
-        <Link
+        <button
+          type='button'
           className='w-full flex items-center justify-center py-2 rounded-md font-bold bg-error text-foreground hover:scale-[1.01] transition-transform mt-16'
-          href='/'
+          onClick={handleLogOut}
         >
           Logout
-        </Link>
+        </button>
       </main>
     </>
   )
