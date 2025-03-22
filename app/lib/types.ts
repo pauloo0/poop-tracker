@@ -1,0 +1,28 @@
+export interface User {
+  id: string
+  email: string
+  username: string
+  firstname: string
+  lastname: string
+  createdAt: string
+}
+
+export interface PoopLog {
+  id: string
+  userId: string
+  timestamp: string
+  rating?: number
+  location?: string
+  notes?: string
+}
+
+export interface Competition {
+  id: string
+  name: string
+  createdBy: string
+  members: string[]
+  createdAt: string
+  startDate: string
+  endDate: string
+  winner?: string
+}
