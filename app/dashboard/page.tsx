@@ -58,23 +58,14 @@ export default function Dashboard() {
               </div>
               <span>80</span>
             </li>
-            <li className='flex flex-row items-center justify-between text-lg border-b-2 border-b-primary p-2'>
+            <li className='flex flex-row items-center justify-between text-lg p-2'>
               <div className='flex flex-row items-center gap-4'>
                 <span>3</span> André Silva
               </div>
               <span>71</span>
             </li>
-            <li className='flex flex-row items-center justify-between text-base border-b-2 border-b-primary p-2'>
-              <div className='flex flex-row items-center gap-4'>
-                <span>4</span> João Machado
-              </div>
-              <span>68</span>
-            </li>
-            <li className='flex flex-row items-center justify-between text-base border-b-2 border-b-primary p-2'>
-              <div className='flex flex-row items-center gap-4'>
-                <span>5</span> Rui Oliveira
-              </div>
-              <span>66</span>
+            <li className='flex flex-row items-center justify-between text-lg p-2'>
+              <Link href='/competitions?competition=id123'>See more...</Link>
             </li>
           </ul>
         </section>
