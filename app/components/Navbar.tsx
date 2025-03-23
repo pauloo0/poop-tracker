@@ -12,6 +12,18 @@ function Navbar({ active }: { active: string }) {
           height={30}
         />
       </Link>
+      <Link href='/competitions'>
+        <Image
+          src={`/${
+            active === 'competitions'
+              ? 'competitions-filled.svg'
+              : 'competitions.svg'
+          }`}
+          alt='Competitions'
+          width={30}
+          height={30}
+        />
+      </Link>
       <Link href='/logs'>
         <Image
           src={`/${active === 'logs' ? 'logs-filled.svg' : 'logs.svg'}`}
