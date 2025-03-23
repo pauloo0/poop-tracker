@@ -1,9 +1,18 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
-
+import Loading from '@/app/components/Loading'
+import { useAuthState } from '@/app/hooks/useAuthState'
 import { LogIn } from 'lucide-react'
 
 export default function Home() {
+  const loading = useAuthState()
+
+  if (loading) {
+    return <Loading />
+  }
+
   return (
     <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
       <main className='flex flex-col gap-12 row-start-2 items-center sm:items-start'>
