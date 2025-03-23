@@ -5,12 +5,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
-
 import { createUserEmailPassword } from './actions'
 import { signInWithPopup } from 'firebase/auth'
 import { auth } from '@/app/lib/firebase'
 import { googleProvider } from '@/app/lib/firebase'
 import { completeUserRegistration } from './actions'
+import { RegisterFormErrors } from '@/app/lib/types'
 
 async function createUserGoogle() {
   try {
@@ -39,19 +39,27 @@ export default function Register() {
   const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
+  const [errors, setErrors] = useState<RegisterFormErrors | null>(null)
 
   const handleEmailSubmit = (formData: FormData) => {
     startTransition(async () => {
       try {
-        await createUserEmailPassword(formData)
-        router.push('/dashboard')
+        const result = await createUserEmailPassword(formData)
+
+        if (result && 'errors' in result) {
+          setErrors(result.errors as RegisterFormErrors)
+        } else {
+          setErrors(null)
+          router.push('/dashboard')
+        }
       } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : 'Failed to sign up with email/password.'
-        )
+        setErrors({
+          general: [
+            error instanceof Error
+              ? error.message
+              : 'Failed to sign up with email/password.',
+          ],
+        })
       }
     })
   }
@@ -62,11 +70,13 @@ export default function Register() {
         await createUserGoogle()
         router.push('/dashboard')
       } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : 'Failed to sign up with Google.'
-        )
+        setErrors({
+          general: [
+            error instanceof Error
+              ? error.message
+              : 'Failed to sign up with email/password.',
+          ],
+        })
       }
     })
   }
@@ -74,7 +84,7 @@ export default function Register() {
   return (
     <Form
       action={handleEmailSubmit}
-      className='flex flex-col gap-6 w-full sm:w-96 p-6'
+      className='flex flex-col w-full gap-6 p-6 sm:w-96'
     >
       <div className={input_group}>
         <label htmlFor='firstname' className={input_group_label}>
@@ -87,6 +97,9 @@ export default function Register() {
           placeholder='First name'
           className={input_group_input}
         />
+        {errors?.firstname && (
+          <p className='text-sm text-red-500'>{errors.firstname[0]}</p>
+        )}
       </div>
       <div className={input_group}>
         <label htmlFor='lastname' className={input_group_label}>
@@ -99,6 +112,9 @@ export default function Register() {
           placeholder='Last name'
           className={input_group_input}
         />
+        {errors?.lastname && (
+          <p className='text-sm text-red-500'>{errors.lastname[0]}</p>
+        )}
       </div>
       <div className={input_group}>
         <label htmlFor='email' className={input_group_label}>
@@ -111,6 +127,9 @@ export default function Register() {
           placeholder='example@email.com'
           className={input_group_input}
         />
+        {errors?.email && (
+          <p className='text-sm text-red-500'>{errors.email[0]}</p>
+        )}
       </div>
       <div className={input_group}>
         <label htmlFor='password' className={input_group_label}>
@@ -120,9 +139,12 @@ export default function Register() {
           type='password'
           id='password'
           name='password'
-          placeholder='First name'
+          placeholder='Password'
           className={input_group_input}
         />
+        {errors?.password && (
+          <p className='text-sm text-red-500'>{errors.password[0]}</p>
+        )}
       </div>
       <div className={input_group}>
         <label htmlFor='confirm_password' className={input_group_label}>
@@ -135,25 +157,30 @@ export default function Register() {
           placeholder='Confirm Password'
           className={input_group_input}
         />
+        {errors?.confirm_password && (
+          <p className='text-sm text-red-500'>{errors.confirm_password[0]}</p>
+        )}
       </div>
       <div className='flex flex-col gap-4'>
         <button
           type='submit'
           disabled={isPending}
-          className='bg-primary text-foreground py-3 px-6 rounded-2xl flex flex-row items-center justify-start gap-6'
+          className='flex flex-row items-center justify-start gap-6 px-6 py-3 bg-primary text-foreground rounded-2xl'
         >
           {isPending ? 'Signing Up...' : 'Register'}
         </button>
         <button
           disabled={isPending}
           onClick={handleGoogleSignUp}
-          className='bg-white text-black py-3 px-6 rounded-2xl flex flex-row items-center justify-start gap-6'
+          className='flex flex-row items-center justify-start gap-6 px-6 py-3 text-black bg-white rounded-2xl'
         >
           <Image src='/google-logo.webp' alt='' width={24} height={24} />
           {isPending ? 'Signing Up...' : 'Sign up with Google'}
         </button>
       </div>
-      {error && <p className='text-error text-center'>{error}</p>}
+      {errors?.general && (
+        <p className='text-sm text-red-500'>{errors.general[0]}</p>
+      )}
       <p>
         {`Already have an account? `}{' '}
         <Link className='text-primary hover:underline' href={`/login`}>

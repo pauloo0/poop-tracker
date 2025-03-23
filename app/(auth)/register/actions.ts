@@ -4,6 +4,8 @@ import { db, auth } from '@/app/lib/firebase'
 import { User } from '@/app/lib/types'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
+import { newUserSchema } from '@/app/lib/zod'
+import { z } from 'zod'
 
 export async function completeUserRegistration(user: User) {
   try {
@@ -23,17 +25,13 @@ export async function createUserEmailPassword(formData: FormData) {
     confirm_password: formData.get('confirm_password') as string,
   }
 
-  // Basic password validation
-  // TODO - Validate formData with zod
-  if (newUser.password !== newUser.confirm_password) {
-    throw new Error('Passwords do not match.')
-  }
-
   try {
+    const validatedData = newUserSchema.parse(newUser)
+
     const userCredential = await createUserWithEmailAndPassword(
       auth,
-      newUser.email,
-      newUser.password
+      validatedData.email,
+      validatedData.password
     )
     const user = userCredential.user
 
@@ -47,6 +45,10 @@ export async function createUserEmailPassword(formData: FormData) {
 
     await completeUserRegistration(userData)
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { errors: error.flatten().fieldErrors }
+    }
+
     console.error('Error in createUserEmailPassword: ', error)
     throw error
   }
