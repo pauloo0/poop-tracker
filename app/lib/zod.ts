@@ -26,3 +26,15 @@ export const newUserSchema = z
     message: 'Passwords do not match.',
     path: ['confirm_password'],
   })
+
+export const newPoopLogSchema = z.object({
+  date: z.date(),
+  time: z.string().min(1, { message: 'This field is required.' }),
+  rating: z
+    .number()
+    .min(1, { message: 'Rating must be between 1 and 5' })
+    .max(5, { message: 'Rating must be between 1 and 5' })
+    .optional(),
+  location: z.string().optional(),
+  notes: z.string().optional(),
+})

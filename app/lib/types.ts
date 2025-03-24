@@ -7,9 +7,10 @@ export interface User {
 }
 
 export interface PoopLog {
-  id: string
+  id?: string
   userId: string
-  timestamp: string
+  date: string
+  time: string
   rating?: number
   location?: string
   notes?: string
@@ -32,5 +33,14 @@ export interface RegisterFormErrors {
   email?: string[]
   password?: string[]
   confirm_password?: string[]
+  general?: string[]
+}
+
+export interface PoopLogFormErrors {
+  date?: string[]
+  time?: string[]
+  rating?: string[]
+  location?: string[]
+  notes?: string[]
   general?: string[]
 }
