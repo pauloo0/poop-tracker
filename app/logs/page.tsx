@@ -1,10 +1,45 @@
 'use client'
 
-import { redirect } from 'next/navigation'
-import { Pencil } from 'lucide-react'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
+import { Pencil } from 'lucide-react'
+import { PoopLog } from '@/app/lib/types'
+import { useAuthState } from '@/app/hooks/useAuthState'
+import Loading from '@/app/components/Loading'
+import { getPoopLogs } from './actions'
 
 export default function Logs() {
+  const { loading, userId } = useAuthState()
+
+  const [poopLogs, setPoopLogs] = useState<PoopLog[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchPoopLogs = async () => {
+      if (!userId) {
+        return
+      }
+
+      try {
+        const res = await getPoopLogs(userId)
+        setPoopLogs(res.data)
+      } catch (error) {
+        console.error(error)
+        setError('Error fetching poop logs')
+      }
+    }
+
+    fetchPoopLogs()
+  }, [userId])
+
+  if (loading) {
+    return <Loading />
+  }
+
+  if (error) {
+    return <h1 className='text-2xl'>{error}</h1>
+  }
+
   return (
     <>
       <main className='p-6'>
@@ -69,38 +104,23 @@ export default function Logs() {
 
         <section id='logs'>
           <ul>
-            <li className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'>
-              <div className='flex flex-row items-center gap-4'>
-                2025-01-01 @ 12:30
-              </div>
-              <button onClick={() => redirect('/edit-poop/' + '123')}>
-                <Pencil className='h-5 w-5' />
-              </button>
-            </li>
-            <li className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'>
-              <div className='flex flex-row items-center gap-4'>
-                2025-01-02 @ 11:32
-              </div>
-              <button onClick={() => redirect('/edit-poop/' + '456')}>
-                <Pencil className='h-5 w-5' />
-              </button>
-            </li>
-            <li className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'>
-              <div className='flex flex-row items-center gap-4'>
-                2025-01-03 @ 16:46
-              </div>
-              <button onClick={() => redirect('/edit-poop/' + '789')}>
-                <Pencil className='h-5 w-5' />
-              </button>
-            </li>
-            <li className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'>
-              <div className='flex flex-row items-center gap-4'>
-                2025-01-04 @ 12:59
-              </div>
-              <button onClick={() => redirect('/edit-poop/' + '321')}>
-                <Pencil className='h-5 w-5' />
-              </button>
-            </li>
+            {poopLogs ? (
+              poopLogs.map((poopLog) => (
+                <li
+                  key={poopLog.id}
+                  className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'
+                >
+                  <div className='flex flex-row items-center gap-4'>
+                    {poopLog.date} @ {poopLog.time}
+                  </div>
+                  <Link href={`/edit-poop/${poopLog.id}`}>
+                    <Pencil className='h-5 w-5' />
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <h1>No poop logs found.</h1>
+            )}
           </ul>
         </section>
       </main>
