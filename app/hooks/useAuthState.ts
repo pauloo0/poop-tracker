@@ -9,30 +9,16 @@ export function useAuthState() {
   const pathname = usePathname()
 
   const [loading, setLoading] = useState(true)
+  const [userId, setUserId] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (
-        (pathname === '/login' ||
-          pathname === '/register' ||
-          pathname === '/') &&
-        user
-      ) {
-        router.push('/dashboard')
-      } else if (
-        pathname !== '/login' &&
-        pathname !== '/register' &&
-        pathname !== '/' &&
-        !user
-      ) {
-        router.push('/login')
-      }
-
+      setUserId(user ? user.uid : undefined)
       setLoading(false)
     })
 
     return () => unsubscribe()
   }, [router, pathname])
 
-  return loading
+  return { loading, userId }
 }
