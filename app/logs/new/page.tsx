@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useTransition, useState } from 'react'
 import { format } from 'date-fns'
 import { PoopLogFormErrors } from '@/app/lib/types'
-import { auth } from '../lib/firebase'
+import { auth } from '@/app/lib/firebase'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 

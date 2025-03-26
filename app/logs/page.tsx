@@ -148,7 +148,7 @@ export default function Logs() {
           </div>
 
           <Link
-            href='/new-poop'
+            href='/logs/new'
             className='flex flex-row items-center justify-center w-full px-3 py-2 rounded-md bg-primary text-foreground sm:w-48'
           >
             Log poop
@@ -166,7 +166,7 @@ export default function Logs() {
                   <div className='flex flex-row items-center gap-4'>
                     {poopLog.date} @ {poopLog.time}
                   </div>
-                  <Link href={`/edit-poop/${poopLog.id}`}>
+                  <Link href={`/logs/edit/${poopLog.id}`}>
                     <Pencil className='h-5 w-5' />
                   </Link>
                 </li>
