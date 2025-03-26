@@ -1,7 +1,7 @@
 'use client'
 
 import Form from 'next/form'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { editPoop } from './actions'
 import { useState, useEffect, use } from 'react'
 import { useAuthState } from '@/app/hooks/useAuthState'
@@ -30,6 +30,7 @@ export default function EditPoop({
   useAuthRedirect({ loading: authLoading, user })
 
   const id = use(params)
+  const router = useRouter()
 
   const [poopData, setPoopData] = useState<PoopData>({
     date: '',
@@ -90,7 +91,7 @@ export default function EditPoop({
         <button
           type='reset'
           className='bg-foreground text-primary py-2 px-2 rounded-md flex-grow'
-          onClick={() => redirect('/dashboard')}
+          onClick={() => router.back()}
         >
           Cancel
         </button>

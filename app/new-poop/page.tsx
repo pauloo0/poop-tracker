@@ -163,7 +163,7 @@ export default function NewPoop() {
           type='reset'
           disabled={isPending}
           className='flex-grow px-2 py-2 rounded-md bg-foreground text-primary'
-          onClick={() => router.push('/dashboard')}
+          onClick={() => router.back()}
         >
           Cancel
         </button>
