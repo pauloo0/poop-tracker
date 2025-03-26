@@ -7,13 +7,23 @@ import { PoopLog } from '@/app/lib/types'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 import { getPoopLogs } from './actions'
+import { format, getYear } from 'date-fns'
 
 export default function Logs() {
   const { loading: authLoading, user } = useAuthState()
   useAuthRedirect({ loading: authLoading, user })
 
-  const [poopLogs, setPoopLogs] = useState<PoopLog[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [dataLoading, setDataLoading] = useState<boolean>(true)
+  const [poopLogs, setPoopLogs] = useState<PoopLog[] | null>(null)
+
+  const [filteredPoopLogs, setFilteredPoopLogs] = useState<PoopLog[] | null>(
+    null
+  )
+  const [months, setMonths] = useState<string[]>([])
+  const [selectedMonth, setSelectedMonth] = useState<string>('all')
+  const [years, setYears] = useState<string[]>([])
+  const [selectedYear, setSelectedYear] = useState<string>('all')
 
   useEffect(() => {
     const fetchPoopLogs = async () => {
@@ -23,7 +33,32 @@ export default function Logs() {
 
       try {
         const res = await getPoopLogs(user.uid)
-        setPoopLogs(res.data)
+        const logs = res.data.sort((a: PoopLog, b: PoopLog) => {
+          const dateA = new Date(a.date).getTime()
+          const dateB = new Date(b.date).getTime()
+
+          return dateB - dateA
+        })
+
+        const logsMonths = logs
+          .map((log: PoopLog) => format(new Date(log.date), 'MMMM'))
+          .filter((value, index, self) => self.indexOf(value) === index)
+          .sort(
+            (a, b) =>
+              new Date(`01 ${a} 2000`).getMonth() -
+              new Date(`01 ${b} 2000`).getMonth()
+          )
+
+        const logsYears = logs
+          .map((log: PoopLog) => getYear(log.date).toString())
+          .filter((value, index, self) => self.indexOf(value) === index)
+          .sort((a, b) => Number(a) - Number(b))
+
+        setPoopLogs(logs)
+        setMonths(logsMonths)
+        setYears(logsYears)
+
+        setDataLoading(false)
       } catch (error) {
         console.error(error)
         setError('Error fetching poop logs')
@@ -32,6 +67,28 @@ export default function Logs() {
 
     fetchPoopLogs()
   }, [user])
+
+  useEffect(() => {
+    if (!poopLogs) {
+      return
+    }
+
+    let filteredLogs = poopLogs
+
+    if (selectedMonth !== 'all') {
+      filteredLogs = filteredLogs.filter(
+        (log) => format(log.date, 'MMM').toLowerCase() === selectedMonth
+      )
+    }
+
+    if (selectedYear !== 'all') {
+      filteredLogs = filteredLogs.filter(
+        (log) => getYear(log.date).toString() === selectedYear
+      )
+    }
+
+    setFilteredPoopLogs(filteredLogs)
+  }, [selectedMonth, selectedYear, poopLogs])
 
   if (error) {
     return <h1 className='text-2xl'>{error}</h1>
@@ -56,20 +113,16 @@ export default function Logs() {
                 name='month'
                 id='month'
                 className='bg-background py-2 px-3 border-2 border-primary rounded-md'
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
               >
                 <option value='all'>All</option>
-                <option value='jan'>January</option>
-                <option value='feb'>February</option>
-                <option value='mar'>March</option>
-                <option value='apr'>April</option>
-                <option value='may'>May</option>
-                <option value='jun'>June</option>
-                <option value='july'>July</option>
-                <option value='aug'>August</option>
-                <option value='sep'>September</option>
-                <option value='oct'>October</option>
-                <option value='nov'>November</option>
-                <option value='dec'>December</option>
+                {months.length > 0 &&
+                  months.map((month, idx) => (
+                    <option key={idx} value={month.toLowerCase().slice(0, 3)}>
+                      {month}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className='flex flex-col flex-1'>
@@ -80,13 +133,16 @@ export default function Logs() {
                 name='year'
                 id='year'
                 className='bg-background py-2 px-3 border-2 border-primary rounded-md'
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
               >
                 <option value='all'>All</option>
-                <option value='2025'>2025</option>
-                <option value='2024'>2024</option>
-                <option value='2023'>2023</option>
-                <option value='2022'>2022</option>
-                <option value='2021'>2021</option>
+                {years.length > 0 &&
+                  years.map((year, idx) => (
+                    <option key={idx} value={year}>
+                      {year}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
@@ -101,8 +157,8 @@ export default function Logs() {
 
         <section id='logs'>
           <ul>
-            {poopLogs ? (
-              poopLogs.map((poopLog) => (
+            {filteredPoopLogs && filteredPoopLogs.length > 0 ? (
+              filteredPoopLogs.map((poopLog) => (
                 <li
                   key={poopLog.id}
                   className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'
@@ -115,6 +171,8 @@ export default function Logs() {
                   </Link>
                 </li>
               ))
+            ) : dataLoading ? (
+              <h1>Data is loading...</h1>
             ) : (
               <h1>No poop logs found.</h1>
             )}
