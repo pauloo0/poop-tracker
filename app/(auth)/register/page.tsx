@@ -11,6 +11,8 @@ import { auth } from '@/app/lib/firebase'
 import { googleProvider } from '@/app/lib/firebase'
 import { completeUserRegistration } from './actions'
 import { RegisterFormErrors } from '@/app/lib/types'
+import { useAuthState } from '@/app/hooks/useAuthState'
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 
 async function createUserGoogle() {
   try {
@@ -35,6 +37,9 @@ export default function Register() {
   const input_group = 'flex flex-col'
   const input_group_label = 'px-1 text-foreground'
   const input_group_input = 'bg-background py-2 px-3 border-b-2 border-primary'
+
+  const { loading: authLoading, user } = useAuthState()
+  useAuthRedirect({ loading: authLoading, user })
 
   const router = useRouter()
 

@@ -4,8 +4,13 @@ import { Pencil, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
+import { useAuthState } from '@/app/hooks/useAuthState'
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 
 export default function Competitions() {
+  const { loading: authLoading, user } = useAuthState()
+  useAuthRedirect({ loading: authLoading, user })
+
   const searchParams = useSearchParams()
   const initialCompetition = searchParams.get('competition') || 'none'
 

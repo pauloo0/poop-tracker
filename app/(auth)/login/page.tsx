@@ -5,6 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useTransition, useState } from 'react'
+import { useAuthState } from '@/app/hooks/useAuthState'
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 
 import { auth, googleProvider } from '@/app/lib/firebase'
 import { loginUserEmailPassword } from './actions'
@@ -23,6 +25,9 @@ export default function Login() {
   const input_group = 'flex flex-col'
   const input_group_label = 'px-1 text-foreground'
   const input_group_input = 'bg-background py-2 px-3 border-b-2 border-primary'
+
+  const { loading: authLoading, user } = useAuthState()
+  useAuthRedirect({ loading: authLoading, user })
 
   const router = useRouter()
 

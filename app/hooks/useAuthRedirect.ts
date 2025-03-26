@@ -1,27 +1,32 @@
 'use client'
 
+import { User } from 'firebase/auth'
 import { usePathname, useRouter } from 'next/navigation'
-import { useAuthState } from '@/app/hooks/useAuthState'
+import { useEffect } from 'react'
 
-export function useAuthRedirect() {
+export function useAuthRedirect({
+  loading,
+  user,
+}: {
+  loading: boolean
+  user: User | null
+}) {
   const router = useRouter()
   const pathname = usePathname()
 
-  const { loading, userId } = useAuthState()
+  useEffect(() => {
+    if (loading) return
 
-  if (!loading) {
-    if (
-      (pathname === '/login' || pathname === '/register' || pathname === '/') &&
-      userId
-    ) {
-      router.push('/dashboard')
-    } else if (
-      pathname !== '/login' &&
-      pathname !== '/register' &&
-      pathname !== '/' &&
-      !userId
-    ) {
-      router.push('/login')
+    const publicRoutes = ['/', '/login', '/register']
+
+    if (user) {
+      if (publicRoutes.includes(pathname)) {
+        router.push('/dashboard')
+      }
+    } else {
+      if (!publicRoutes.includes(pathname)) {
+        router.push('/login')
+      }
     }
-  }
+  }, [loading, user, router, pathname])
 }

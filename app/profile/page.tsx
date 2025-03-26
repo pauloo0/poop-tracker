@@ -5,8 +5,13 @@ import Link from 'next/link'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/app/lib/firebase'
 import { useRouter } from 'next/navigation'
+import { useAuthState } from '@/app/hooks/useAuthState'
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 
 export default function Profile() {
+  const { loading: authLoading, user } = useAuthState()
+  useAuthRedirect({ loading: authLoading, user })
+
   const router = useRouter()
 
   const handleLogOut = async () => {

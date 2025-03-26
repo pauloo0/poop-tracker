@@ -7,11 +7,16 @@ import { useTransition, useState } from 'react'
 import { format } from 'date-fns'
 import { PoopLogFormErrors } from '@/app/lib/types'
 import { auth } from '../lib/firebase'
+import { useAuthState } from '@/app/hooks/useAuthState'
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 
 export default function NewPoop() {
   const input_group = 'flex flex-col'
   const input_group_label = 'px-1 text-foreground'
   const input_group_input = 'bg-background py-2 px-3 border-b-2 border-primary'
+
+  const { loading: authLoading, user } = useAuthState()
+  useAuthRedirect({ loading: authLoading, user })
 
   const router = useRouter()
 

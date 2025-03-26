@@ -4,6 +4,8 @@ import Form from 'next/form'
 import { redirect } from 'next/navigation'
 import { editPoop } from './actions'
 import { useState, useEffect, use } from 'react'
+import { useAuthState } from '@/app/hooks/useAuthState'
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 
 const poop = {
   date: '14/03/2025',
@@ -23,6 +25,9 @@ export default function EditPoop({
   const input_group = 'flex flex-col'
   const input_group_label = 'px-1 text-foreground'
   const input_group_input = 'bg-background py-2 px-3 border-b-2 border-primary'
+
+  const { loading: authLoading, user } = useAuthState()
+  useAuthRedirect({ loading: authLoading, user })
 
   const id = use(params)
 

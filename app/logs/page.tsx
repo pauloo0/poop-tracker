@@ -5,23 +5,24 @@ import { useState, useEffect } from 'react'
 import { Pencil } from 'lucide-react'
 import { PoopLog } from '@/app/lib/types'
 import { useAuthState } from '@/app/hooks/useAuthState'
-import Loading from '@/app/components/Loading'
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 import { getPoopLogs } from './actions'
 
 export default function Logs() {
-  const { loading, userId } = useAuthState()
+  const { loading: authLoading, user } = useAuthState()
+  useAuthRedirect({ loading: authLoading, user })
 
   const [poopLogs, setPoopLogs] = useState<PoopLog[] | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchPoopLogs = async () => {
-      if (!userId) {
+      if (!user) {
         return
       }
 
       try {
-        const res = await getPoopLogs(userId)
+        const res = await getPoopLogs(user.uid)
         setPoopLogs(res.data)
       } catch (error) {
         console.error(error)
@@ -30,11 +31,7 @@ export default function Logs() {
     }
 
     fetchPoopLogs()
-  }, [userId])
-
-  if (loading) {
-    return <Loading />
-  }
+  }, [user])
 
   if (error) {
     return <h1 className='text-2xl'>{error}</h1>

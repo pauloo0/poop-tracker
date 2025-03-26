@@ -3,22 +3,23 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { auth } from '@/app/lib/firebase'
 import { useEffect, useState } from 'react'
+import { User } from 'firebase/auth'
 
 export function useAuthState() {
   const router = useRouter()
   const pathname = usePathname()
 
   const [loading, setLoading] = useState(true)
-  const [userId, setUserId] = useState<string | undefined>(undefined)
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUserId(user ? user.uid : undefined)
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser)
       setLoading(false)
     })
 
     return () => unsubscribe()
   }, [router, pathname])
 
-  return { loading, userId }
+  return { loading, user }
 }
