@@ -3,7 +3,7 @@
 import { format } from 'date-fns'
 import { collection, doc, setDoc } from 'firebase/firestore'
 import { z } from 'zod'
-import { newPoopLogSchema } from '@/app/lib/zod'
+import { poopLogSchema } from '@/app/lib/zod'
 import { db } from '@/app/lib/firebase'
 import { PoopLog } from '@/app/lib/types'
 
@@ -17,7 +17,7 @@ export async function createPoopLog(formData: FormData, userId: string) {
   }
 
   try {
-    const validatedData = newPoopLogSchema.parse(newPoopLog)
+    const validatedData = poopLogSchema.parse(newPoopLog)
 
     const poopLogRef = doc(collection(db, 'poopLogs'))
 

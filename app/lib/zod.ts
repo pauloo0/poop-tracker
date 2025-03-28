@@ -27,7 +27,7 @@ export const newUserSchema = z
     path: ['confirm_password'],
   })
 
-export const newPoopLogSchema = z.object({
+export const poopLogSchema = z.object({
   date: z.date(),
   time: z.string().min(1, { message: 'This field is required.' }),
   rating: z
