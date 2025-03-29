@@ -112,7 +112,7 @@ export default function Dashboard() {
 
         <section className='grid place-items-center'>
           <Link
-            href='/new-poop'
+            href='/logs/new'
             className='rounded-xl w-full sm:w-48 transition-transform flex items-center justify-center bg-primary text-foreground gap-2 hover:scale-105 text-base h-10 sm:h-12 px-4 sm:px-5'
           >
             Record a poo!
