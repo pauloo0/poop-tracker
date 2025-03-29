@@ -16,11 +16,17 @@ export interface PoopLog {
   notes?: string
 }
 
+type CompetitionMember = {
+  id: string
+  fullname?: string
+  score?: number
+}
+
 export interface Competition {
   id?: string
   name: string
   createdBy: string
-  members: string[]
+  members: CompetitionMember[]
   startDate: string
   endDate: string
   ended: boolean
