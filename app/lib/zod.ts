@@ -38,3 +38,13 @@ export const poopLogSchema = z.object({
   location: z.string().optional(),
   notes: z.string().optional(),
 })
+
+export const competitionSchema = z.object({
+  name: z.string(),
+  createdBy: z.string(),
+  members: z.string().array(),
+  startDate: z.date(),
+  endDate: z.date(),
+  ended: z.boolean(),
+  winner: z.string().optional(),
+})

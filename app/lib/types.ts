@@ -17,13 +17,13 @@ export interface PoopLog {
 }
 
 export interface Competition {
-  id: string
+  id?: string
   name: string
   createdBy: string
   members: string[]
-  createdAt: string
   startDate: string
   endDate: string
+  ended: boolean
   winner?: string
 }
 
@@ -42,5 +42,10 @@ export interface PoopLogFormErrors {
   rating?: string[]
   location?: string[]
   notes?: string[]
+  general?: string[]
+}
+
+export interface CompetitionFormErrors {
+  name?: string[]
   general?: string[]
 }
