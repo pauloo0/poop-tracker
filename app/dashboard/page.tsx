@@ -1,12 +1,60 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
+import Loading from '@/app/components/Loading'
+import { getDashboardData } from '@/app/dashboard/actions'
 
 export default function Dashboard() {
   const { loading: authLoading, user } = useAuthState()
   useAuthRedirect({ loading: authLoading, user })
+
+  const [error, setError] = useState<string | null>(null)
+  const [dataLoading, setDataLoading] = useState<boolean>(true)
+
+  const [monthlyPoops, setMonthlyPoops] = useState<number>(0)
+  const [yearlyPoops, setYearlyPoops] = useState<number>(0)
+  const [currentStreak, setCurrentStreak] = useState<number>(0)
+  const [highestStreak, setHighestStreak] = useState<number>(0)
+  const [dailyRecord, setDailyRecord] = useState<number>(0)
+  const [dailyRecordDate, setDailyRecordDate] = useState<string>('')
+  const [highestStreakDate, setHighestStreakDate] = useState<string>('')
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (!user) return
+
+      try {
+        const resDashboard = await getDashboardData(user.uid)
+        const { success, data } = resDashboard
+
+        if (!success) throw new Error('Error fetching dashboardData')
+
+        setMonthlyPoops(data.monthlyPoops)
+        setYearlyPoops(data.yearlyPoops)
+        setDailyRecord(data.dailyRecord)
+        setDailyRecordDate(data.dailyRecordDate)
+        setCurrentStreak(data.currentStreak)
+        setHighestStreak(data.highestStreak)
+        setHighestStreakDate(data.highestStreakDate)
+
+        setDataLoading(false)
+      } catch (error) {
+        console.error(error)
+        setError('Error fetching poop logs')
+      }
+    }
+
+    fetchDashboardData()
+  }, [user])
+
+  if (dataLoading) return <Loading />
+
+  if (error) {
+    return <h1 className='text-2xl'>{error}</h1>
+  }
 
   return (
     <>
@@ -18,26 +66,26 @@ export default function Dashboard() {
         <section id='stats' className='my-14 grid grid-cols-2 gap-x-4 gap-y-8'>
           <div className='flex flex-col items-center'>
             <h2 className='text-lg font-bold'>Month</h2>
-            <p className='text-xl'>16</p>
+            <p className='text-xl'>{monthlyPoops}</p>
           </div>
           <div className='flex flex-col items-center'>
             <h2 className='text-lg font-bold'>Year</h2>
-            <p className='text-xl'>80</p>
+            <p className='text-xl'>{yearlyPoops}</p>
           </div>
 
           <div className='flex flex-col items-center'>
             <h2 className='text-lg font-bold'>Daily Record</h2>
-            <p className='text-xl'>3</p>
-            <span className='text-sm'>on Jan 8th, 2025</span>
+            <p className='text-xl'>{dailyRecord}</p>
+            <span className='text-sm'>{dailyRecordDate}</span>
           </div>
           <div className='flex flex-col items-center'>
             <h2 className='text-lg font-bold'>Current Streak</h2>
-            <p className='text-xl'>11</p>
+            <p className='text-xl'>{currentStreak}</p>
           </div>
           <div className='flex flex-col items-center col-span-2'>
             <h2 className='text-lg font-bold'>Highest Streak</h2>
-            <p className='text-xl'>16</p>
-            <span className='text-sm'>from Jan 4th, 2025 to 19th, 2025</span>
+            <p className='text-xl'>{highestStreak}</p>
+            <span className='text-sm'>{highestStreakDate}</span>
           </div>
         </section>
 
