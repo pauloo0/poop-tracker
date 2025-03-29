@@ -6,6 +6,7 @@ import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 import Loading from '@/app/components/Loading'
 import { getDashboardData } from '@/app/dashboard/actions'
+import { getUserData } from '@/app/profile/actions'
 
 export default function Dashboard() {
   const { loading: authLoading, user } = useAuthState()
@@ -13,6 +14,7 @@ export default function Dashboard() {
 
   const [error, setError] = useState<string | null>(null)
   const [dataLoading, setDataLoading] = useState<boolean>(true)
+  const [userFullname, setUserFullname] = useState<string>('')
 
   const [monthlyPoops, setMonthlyPoops] = useState<number>(0)
   const [yearlyPoops, setYearlyPoops] = useState<number>(0)
@@ -23,8 +25,10 @@ export default function Dashboard() {
   const [highestStreakDate, setHighestStreakDate] = useState<string>('')
 
   useEffect(() => {
+    if (!user) return
+
     const fetchDashboardData = async () => {
-      if (!user) return
+      setDataLoading(true)
 
       try {
         const resDashboard = await getDashboardData(user.uid)
@@ -47,7 +51,24 @@ export default function Dashboard() {
       }
     }
 
+    const fetchUserData = async () => {
+      setDataLoading(true)
+
+      try {
+        const resUser = await getUserData(user.uid)
+        const { success, data } = resUser
+
+        if (!success) throw new Error('Error fetching userData')
+
+        setUserFullname(data.fullname)
+      } catch (error) {
+        console.error(error)
+        setError('Error fetching user info')
+      }
+    }
+
     fetchDashboardData()
+    fetchUserData()
   }, [user])
 
   if (dataLoading) return <Loading />
@@ -60,7 +81,7 @@ export default function Dashboard() {
     <>
       <main className='mt-12 p-6'>
         <h1 className='text-xl'>
-          Hello, <span className='font-bold'>Paulo</span>
+          Hello, <span className='font-bold'>{userFullname}</span>
         </h1>
 
         <section id='stats' className='my-14 grid grid-cols-2 gap-x-4 gap-y-8'>
