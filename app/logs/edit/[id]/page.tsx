@@ -98,116 +98,114 @@ export default function EditPoop({
     )
 
   return (
-    <Form
-      action={handlePoopLogSubmit}
-      className='flex flex-col gap-6 w-full sm:w-96 p-6'
-    >
-      <div className={input_group}>
-        <label htmlFor='date' className={input_group_label}>
-          Date *
-        </label>
-        <input
-          type='date'
-          id='date'
-          name='date'
-          value={poopData.date}
-          className={input_group_input}
-          onChange={(e) => setPoopData({ ...poopData, date: e.target.value })}
-        />
-        {formErrors?.date && (
-          <p className='text-sm text-red-500'>{formErrors?.date[0]}</p>
+    <main className='mt-12 p-6 w-full sm:w-96 pb-[80px] min-h-screen'>
+      <Form action={handlePoopLogSubmit} className='flex flex-col gap-6'>
+        <div className={input_group}>
+          <label htmlFor='date' className={input_group_label}>
+            Date *
+          </label>
+          <input
+            type='date'
+            id='date'
+            name='date'
+            value={poopData.date}
+            className={input_group_input}
+            onChange={(e) => setPoopData({ ...poopData, date: e.target.value })}
+          />
+          {formErrors?.date && (
+            <p className='text-sm text-red-500'>{formErrors?.date[0]}</p>
+          )}
+        </div>
+        <div className={input_group}>
+          <label htmlFor='time' className={input_group_label}>
+            Time *
+          </label>
+          <input
+            type='time'
+            id='time'
+            name='time'
+            value={poopData.time}
+            className={input_group_input}
+            onChange={(e) => setPoopData({ ...poopData, time: e.target.value })}
+          />
+          {formErrors?.time && (
+            <p className='text-sm text-red-500'>{formErrors?.time[0]}</p>
+          )}
+        </div>
+        <div className={input_group}>
+          <label htmlFor='rating' className={input_group_label}>
+            Rating (1 - 5)
+          </label>
+          <input
+            type='number'
+            id='rating'
+            name='rating'
+            value={poopData.rating}
+            className={input_group_input}
+            onChange={(e) =>
+              setPoopData({ ...poopData, rating: Number(e.target.value) })
+            }
+          />
+          {formErrors?.rating && (
+            <p className='text-sm text-red-500'>{formErrors?.rating[0]}</p>
+          )}
+        </div>
+        <div className={input_group}>
+          <label htmlFor='location' className={input_group_label}>
+            Location
+          </label>
+          <input
+            type='text'
+            id='location'
+            name='location'
+            value={poopData.location}
+            className={input_group_input}
+            onChange={(e) =>
+              setPoopData({ ...poopData, location: e.target.value })
+            }
+          />
+        </div>
+        {formErrors?.location && (
+          <p className='text-sm text-red-500'>{formErrors?.location[0]}</p>
         )}
-      </div>
-      <div className={input_group}>
-        <label htmlFor='time' className={input_group_label}>
-          Time *
-        </label>
-        <input
-          type='time'
-          id='time'
-          name='time'
-          value={poopData.time}
-          className={input_group_input}
-          onChange={(e) => setPoopData({ ...poopData, time: e.target.value })}
-        />
-        {formErrors?.time && (
-          <p className='text-sm text-red-500'>{formErrors?.time[0]}</p>
-        )}
-      </div>
-      <div className={input_group}>
-        <label htmlFor='rating' className={input_group_label}>
-          Rating (1 - 5)
-        </label>
-        <input
-          type='number'
-          id='rating'
-          name='rating'
-          value={poopData.rating}
-          className={input_group_input}
-          onChange={(e) =>
-            setPoopData({ ...poopData, rating: Number(e.target.value) })
-          }
-        />
-        {formErrors?.rating && (
-          <p className='text-sm text-red-500'>{formErrors?.rating[0]}</p>
-        )}
-      </div>
-      <div className={input_group}>
-        <label htmlFor='location' className={input_group_label}>
-          Location
-        </label>
-        <input
-          type='text'
-          id='location'
-          name='location'
-          value={poopData.location}
-          className={input_group_input}
-          onChange={(e) =>
-            setPoopData({ ...poopData, location: e.target.value })
-          }
-        />
-      </div>
-      {formErrors?.location && (
-        <p className='text-sm text-red-500'>{formErrors?.location[0]}</p>
-      )}
-      <div className={input_group}>
-        <label htmlFor='notes' className={input_group_label}>
-          Notes
-        </label>
-        <textarea
-          id='notes'
-          name='notes'
-          value={poopData.notes}
-          rows={10}
-          className={input_group_input}
-          onChange={(e) => setPoopData({ ...poopData, date: e.target.value })}
-        />
-        {formErrors?.notes && (
-          <p className='text-sm text-red-500'>{formErrors?.notes[0]}</p>
-        )}
-      </div>
-      <p className='text-sm'>* Required fields</p>
-
-      <div
-        id='button-group'
-        className='flex flex-row items-center justify-center gap-2'
-      >
-        <button
-          type='submit'
-          disabled={isPending}
-          className='bg-primary text-foreground py-2 px-3 rounded-md flex-grow'
+        <div className={input_group}>
+          <label htmlFor='notes' className={input_group_label}>
+            Notes
+          </label>
+          <textarea
+            id='notes'
+            name='notes'
+            value={poopData.notes}
+            rows={10}
+            className={input_group_input}
+            onChange={(e) => setPoopData({ ...poopData, date: e.target.value })}
+          />
+          {formErrors?.notes && (
+            <p className='text-sm text-red-500'>{formErrors?.notes[0]}</p>
+          )}
+        </div>
+        <p className='text-sm'>* Required fields</p>
+        <div
+          id='button-group'
+          className='flex flex-row items-center justify-center gap-2'
         >
-          Save
-        </button>
-        <button
-          type='reset'
-          disabled={isPending}
-          className='bg-foreground text-primary py-2 px-2 rounded-md flex-grow'
-          onClick={() => router.back()}
-        >
-          Cancel
-        </button>
-      </div>
-    </Form>
+          <button
+            type='submit'
+            disabled={isPending}
+            className='bg-primary text-foreground py-2 px-3 rounded-md flex-grow'
+          >
+            Save
+          </button>
+          <button
+            type='reset'
+            disabled={isPending}
+            className='bg-foreground text-primary py-2 px-2 rounded-md flex-grow'
+            onClick={() => router.back()}
+          >
+            Cancel
+          </button>
+        </div>
+      </Form>
+    </main>
   )
 }

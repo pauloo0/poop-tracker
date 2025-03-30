@@ -51,7 +51,7 @@ function NewCompetition() {
   }
 
   return (
-    <main className='grid min-h-screen place-items-center'>
+    <main className='grid min-h-screen place-items-center pb-[80px]'>
       <Form
         action={handleCompetitionSubmit}
         className='flex flex-col w-full gap-6 p-6 sm:w-96'

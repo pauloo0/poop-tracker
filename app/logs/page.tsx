@@ -95,90 +95,88 @@ export default function Logs() {
   }
 
   return (
-    <>
-      <main className='p-6'>
-        <section
-          id='filters'
-          className='flex flex-col items-center justify-between w-full gap-4 sm:items-end sm:flex-row my-14'
+    <main className='p-6 pb-[80px] min-h-screen'>
+      <section
+        id='filters'
+        className='flex flex-col items-center justify-between w-full gap-4 sm:items-end sm:flex-row my-14'
+      >
+        <div
+          id='comboboxes'
+          className='flex flex-row items-center justify-center gap-4 w-full sm:w-1/3'
         >
-          <div
-            id='comboboxes'
-            className='flex flex-row items-center justify-center gap-4 w-full sm:w-1/3'
-          >
-            <div className='flex flex-col flex-1'>
-              <label htmlFor='month' className='px-1 text-foregroung'>
-                Month
-              </label>
-              <select
-                name='month'
-                id='month'
-                className='bg-background py-2 px-3 border-2 border-primary rounded-md'
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(e.target.value)}
-              >
-                <option value='all'>All</option>
-                {months.length > 0 &&
-                  months.map((month, idx) => (
-                    <option key={idx} value={month.toLowerCase().slice(0, 3)}>
-                      {month}
-                    </option>
-                  ))}
-              </select>
-            </div>
-            <div className='flex flex-col flex-1'>
-              <label htmlFor='year' className='px-1 text-foregroung'>
-                Year
-              </label>
-              <select
-                name='year'
-                id='year'
-                className='bg-background py-2 px-3 border-2 border-primary rounded-md'
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-              >
-                <option value='all'>All</option>
-                {years.length > 0 &&
-                  years.map((year, idx) => (
-                    <option key={idx} value={year}>
-                      {year}
-                    </option>
-                  ))}
-              </select>
-            </div>
+          <div className='flex flex-col flex-1'>
+            <label htmlFor='month' className='px-1 text-foregroung'>
+              Month
+            </label>
+            <select
+              name='month'
+              id='month'
+              className='bg-background py-2 px-3 border-2 border-primary rounded-md'
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            >
+              <option value='all'>All</option>
+              {months.length > 0 &&
+                months.map((month, idx) => (
+                  <option key={idx} value={month.toLowerCase().slice(0, 3)}>
+                    {month}
+                  </option>
+                ))}
+            </select>
           </div>
+          <div className='flex flex-col flex-1'>
+            <label htmlFor='year' className='px-1 text-foregroung'>
+              Year
+            </label>
+            <select
+              name='year'
+              id='year'
+              className='bg-background py-2 px-3 border-2 border-primary rounded-md'
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
+              <option value='all'>All</option>
+              {years.length > 0 &&
+                years.map((year, idx) => (
+                  <option key={idx} value={year}>
+                    {year}
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
 
-          <Link
-            href='/logs/new'
-            className='flex flex-row items-center justify-center w-full px-3 py-2 rounded-md bg-primary text-foreground sm:w-48'
-          >
-            Log poop
-          </Link>
-        </section>
+        <Link
+          href='/logs/new'
+          className='flex flex-row items-center justify-center w-full px-3 py-2 rounded-md bg-primary text-foreground sm:w-48'
+        >
+          Log poop
+        </Link>
+      </section>
 
-        <section id='logs'>
-          <ul>
-            {filteredPoopLogs && filteredPoopLogs.length > 0 ? (
-              filteredPoopLogs.map((poopLog) => (
-                <li
-                  key={poopLog.id}
-                  className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'
-                >
-                  <div className='flex flex-row items-center gap-4'>
-                    {poopLog.date} @ {poopLog.time}
-                  </div>
-                  <Link href={`/logs/edit/${poopLog.id}`}>
-                    <Pencil className='h-5 w-5' />
-                  </Link>
-                </li>
-              ))
-            ) : dataLoading ? (
-              <h1>Data is loading...</h1>
-            ) : (
-              <h1>No poop logs found.</h1>
-            )}
-          </ul>
-        </section>
-      </main>
-    </>
+      <section id='logs'>
+        <ul>
+          {filteredPoopLogs && filteredPoopLogs.length > 0 ? (
+            filteredPoopLogs.map((poopLog) => (
+              <li
+                key={poopLog.id}
+                className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'
+              >
+                <div className='flex flex-row items-center gap-4'>
+                  {poopLog.date} @ {poopLog.time}
+                </div>
+                <Link href={`/logs/edit/${poopLog.id}`}>
+                  <Pencil className='h-5 w-5' />
+                </Link>
+              </li>
+            ))
+          ) : dataLoading ? (
+            <h1>Data is loading...</h1>
+          ) : (
+            <h1>No poop logs found.</h1>
+          )}
+        </ul>
+      </section>
+    </main>
   )
 }

@@ -63,111 +63,110 @@ export default function NewPoop() {
   }
 
   return (
-    <Form
-      action={handlePoopLogSubmit}
-      className='flex flex-col w-full gap-6 p-6 sm:w-96'
-    >
-      <div className={input_group}>
-        <label htmlFor='date' className={input_group_label}>
-          Date *
-        </label>
-        <input
-          type='date'
-          id='date'
-          name='date'
-          value={date}
-          className={input_group_input}
-          onChange={(e) => setDate(e.target.value)}
-        />
-        {errors?.date && (
-          <p className='text-sm text-red-500'>{errors?.date[0]}</p>
-        )}
-      </div>
-      <div className={input_group}>
-        <label htmlFor='time' className={input_group_label}>
-          Time *
-        </label>
-        <input
-          type='time'
-          id='time'
-          name='time'
-          value={time}
-          className={input_group_input}
-          onChange={(e) => setTime(e.target.value)}
-        />
-        {errors?.time && (
-          <p className='text-sm text-red-500'>{errors?.time[0]}</p>
-        )}
-      </div>
-      <div className={input_group}>
-        <label htmlFor='rating' className={input_group_label}>
-          Rating (1 - 5)
-        </label>
-        <input
-          type='number'
-          id='rating'
-          name='rating'
-          value={rating}
-          className={input_group_input}
-          onChange={(e) => setRating(Number(e.target.value))}
-        />
-        {errors?.rating && (
-          <p className='text-sm text-red-500'>{errors?.rating[0]}</p>
-        )}
-      </div>
-      <div className={input_group}>
-        <label htmlFor='location' className={input_group_label}>
-          Location
-        </label>
-        <input
-          type='text'
-          id='location'
-          name='location'
-          value={location}
-          className={input_group_input}
-          onChange={(e) => setLocation(e.target.value)}
-        />
-        {errors?.location && (
-          <p className='text-sm text-red-500'>{errors?.location[0]}</p>
-        )}
-      </div>
-      <div className={input_group}>
-        <label htmlFor='notes' className={input_group_label}>
-          Notes
-        </label>
-        <textarea
-          id='notes'
-          name='notes'
-          value={notes}
-          rows={10}
-          className={input_group_input}
-          onChange={(e) => setNotes(e.target.value)}
-        />
-        {errors?.notes && (
-          <p className='text-sm text-red-500'>{errors?.notes[0]}</p>
-        )}
-      </div>
-      <p className='text-sm'>* Required fields</p>
-      <div
-        id='button-group'
-        className='flex flex-row items-center justify-center gap-2'
-      >
-        <button
-          type='submit'
-          disabled={isPending}
-          className='flex-grow px-3 py-2 rounded-md bg-primary text-foreground'
+    <main className='mt-12 p-6 w-full sm:w-96 pb-[80px] min-h-screen'>
+      <Form action={handlePoopLogSubmit} className='flex flex-col gap-6'>
+        <div className={input_group}>
+          <label htmlFor='date' className={input_group_label}>
+            Date *
+          </label>
+          <input
+            type='date'
+            id='date'
+            name='date'
+            value={date}
+            className={input_group_input}
+            onChange={(e) => setDate(e.target.value)}
+          />
+          {errors?.date && (
+            <p className='text-sm text-red-500'>{errors?.date[0]}</p>
+          )}
+        </div>
+        <div className={input_group}>
+          <label htmlFor='time' className={input_group_label}>
+            Time *
+          </label>
+          <input
+            type='time'
+            id='time'
+            name='time'
+            value={time}
+            className={input_group_input}
+            onChange={(e) => setTime(e.target.value)}
+          />
+          {errors?.time && (
+            <p className='text-sm text-red-500'>{errors?.time[0]}</p>
+          )}
+        </div>
+        <div className={input_group}>
+          <label htmlFor='rating' className={input_group_label}>
+            Rating (1 - 5)
+          </label>
+          <input
+            type='number'
+            id='rating'
+            name='rating'
+            value={rating}
+            className={input_group_input}
+            onChange={(e) => setRating(Number(e.target.value))}
+          />
+          {errors?.rating && (
+            <p className='text-sm text-red-500'>{errors?.rating[0]}</p>
+          )}
+        </div>
+        <div className={input_group}>
+          <label htmlFor='location' className={input_group_label}>
+            Location
+          </label>
+          <input
+            type='text'
+            id='location'
+            name='location'
+            value={location}
+            className={input_group_input}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+          {errors?.location && (
+            <p className='text-sm text-red-500'>{errors?.location[0]}</p>
+          )}
+        </div>
+        <div className={input_group}>
+          <label htmlFor='notes' className={input_group_label}>
+            Notes
+          </label>
+          <textarea
+            id='notes'
+            name='notes'
+            value={notes}
+            rows={10}
+            className={input_group_input}
+            onChange={(e) => setNotes(e.target.value)}
+          />
+          {errors?.notes && (
+            <p className='text-sm text-red-500'>{errors?.notes[0]}</p>
+          )}
+        </div>
+        <p className='text-sm'>* Required fields</p>
+        <div
+          id='button-group'
+          className='flex flex-row items-center justify-center gap-2'
         >
-          Save
-        </button>
-        <button
-          type='reset'
-          disabled={isPending}
-          className='flex-grow px-2 py-2 rounded-md bg-foreground text-primary'
-          onClick={() => router.back()}
-        >
-          Cancel
-        </button>
-      </div>
-    </Form>
+          <button
+            type='submit'
+            disabled={isPending}
+            className='flex-grow px-3 py-2 rounded-md bg-primary text-foreground'
+          >
+            Save
+          </button>
+          <button
+            type='reset'
+            disabled={isPending}
+            className='flex-grow px-2 py-2 rounded-md bg-foreground text-primary'
+            onClick={() => router.back()}
+          >
+            Cancel
+          </button>
+        </div>
+      </Form>
+    </main>
   )
 }
