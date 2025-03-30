@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 import { Competition } from '@/app/lib/types'
-import { getCompetitions } from '@/app/competitions/new/actions'
+import { getCompetitions } from '@/app/competitions/actions'
 
 export default function Competitions() {
   const { loading: authLoading, user } = useAuthState()
