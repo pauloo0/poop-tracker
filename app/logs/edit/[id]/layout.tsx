@@ -7,7 +7,7 @@ export default function EditPoopLayout({
 }) {
   return (
     <section className='grid h-screen place-items-center'>
-      <Navbar active='' />
+      <Navbar active='logs' />
       {children}
     </section>
   )
