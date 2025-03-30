@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Pencil } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { PoopLog } from '@/app/lib/types'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
@@ -154,28 +154,59 @@ export default function Logs() {
         </Link>
       </section>
 
-      <section id='logs'>
-        <ul>
-          {filteredPoopLogs && filteredPoopLogs.length > 0 ? (
-            filteredPoopLogs.map((poopLog) => (
-              <li
-                key={poopLog.id}
-                className='flex flex-row items-center justify-between font-bold border-b-2 border-b-primary p-2'
-              >
-                <div className='flex flex-row items-center gap-4'>
-                  {poopLog.date} @ {poopLog.time}
-                </div>
-                <Link href={`/logs/edit/${poopLog.id}`}>
-                  <Pencil className='h-5 w-5' />
-                </Link>
-              </li>
-            ))
-          ) : dataLoading ? (
-            <h1>Data is loading...</h1>
-          ) : (
-            <h1>No poop logs found.</h1>
-          )}
-        </ul>
+      <section id='logs' className='overflow-x-auto'>
+        <table className='w-full border-collapse rounded-lg shadow-md'>
+          <thead>
+            <tr className='text-lg text-foreground'>
+              <th className='p-2 sm:p-3 font-semibold text-center'>Year</th>
+              <th className='p-2 sm:p-3 font-semibold text-center'>Month</th>
+              <th className='p-2 sm:p-3 font-semibold text-center'>Day</th>
+              <th className='p-2 sm:p-3 font-semibold text-center'>Time</th>
+              <th className='p-2 sm:p-3 font-semibold text-right'>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredPoopLogs && filteredPoopLogs.length > 0 ? (
+              filteredPoopLogs.map((poopLog) => (
+                <tr
+                  key={poopLog.id}
+                  className='border-b border-b-orange-200 border-opacity-20'
+                >
+                  <td className='p-2 sm:p-3 text-center'>
+                    {format(new Date(poopLog.date), 'yyyy')}
+                  </td>
+                  <td className='p-2 sm:p-3 text-center'>
+                    {format(new Date(poopLog.date), 'MMMM')}
+                  </td>
+                  <td className='p-2 sm:p-3 text-center'>
+                    {format(new Date(poopLog.date), 'dd')}
+                  </td>
+                  <td className='p-2 sm:p-3 text-center'>{poopLog.time}</td>
+                  <td className='p-2 sm:p-3 flex items-center justify-end gap-4'>
+                    <Link href={`/logs/edit/${poopLog.id}`}>
+                      <Pencil className='h-5 w-5' />
+                    </Link>
+                    <button>
+                      <Trash2 className='h-5 w-5' />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : dataLoading ? (
+              <tr>
+                <td colSpan={3} className='p-3 text-center'>
+                  Data is loading...
+                </td>
+              </tr>
+            ) : (
+              <tr>
+                <td colSpan={3} className='p-3 text-center'>
+                  No poop logs found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </section>
     </main>
   )
