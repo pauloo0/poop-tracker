@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 function Navbar({ active }: { active: string }) {
   return (
-    <nav className='fixed inset-x-0 bg-gradient-to-b from-yellow-900 to-amber-900 bottom-0 z-10 flex items-center justify-around py-4 px-2'>
+    <nav className='fixed inset-x-0 bg-gradient-to-tr from-amber-900 to-amber-800 bottom-0 z-50 flex items-center justify-around py-4 px-2'>
       <Link href='/dashboard'>
         <Image
           src={`/${active === 'home' ? 'home-filled.svg' : 'home.svg'}`}
