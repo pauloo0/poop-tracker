@@ -8,7 +8,10 @@ import { useState, useEffect } from 'react'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 import { Competition } from '@/app/lib/types'
-import { getCompetitions } from '@/app/competitions/actions'
+import {
+  getCompetitions,
+  updateCompetitionName,
+} from '@/app/competitions/actions'
 
 export default function Competitions() {
   const { loading: authLoading, user } = useAuthState()
@@ -66,6 +69,45 @@ export default function Competitions() {
     }
   }, [user, competitions, competitionId])
 
+  const handleCompetitionEdit = async (competitionId: string) => {
+    if (!user || !competitionId) return
+    const userId = user.uid
+
+    try {
+      setDataLoading(true)
+
+      const resUpdate = await updateCompetitionName(
+        userId,
+        competitionId,
+        competitionName
+      )
+
+      if (!resUpdate.success) {
+        setError("Couldn't update the competition's name.")
+      } else {
+        setIsEditingCompetitionName(false)
+        setCompetitions((prev) => {
+          if (!prev) return null
+
+          const newComps = prev.map((competition) => {
+            if (competition.id === competitionId) {
+              return { ...competition, name: competitionName }
+            } else {
+              return { ...competition }
+            }
+          })
+
+          return newComps
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      setError('Error editing competition name.')
+    } finally {
+      setDataLoading(false)
+    }
+  }
+
   if (dataLoading) return <Loading />
 
   return (
@@ -120,7 +162,10 @@ export default function Competitions() {
                   className='text-2xl border-b-2 bg-background border-primary'
                 />
                 <div className='flex flex-row items-center justify-between w-full gap-2'>
-                  <button className='flex-1 py-1 rounded-md bg-primary text-foreground'>
+                  <button
+                    className='flex-1 py-1 rounded-md bg-primary text-foreground'
+                    onClick={() => handleCompetitionEdit(competitionId)}
+                  >
                     Save
                   </button>
                   <button

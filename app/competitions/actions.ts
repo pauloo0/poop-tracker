@@ -1,6 +1,13 @@
 'use server'
 
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore'
 import { db } from '@/app/lib/firebase'
 import { Competition, User } from '@/app/lib/types'
 
@@ -112,5 +119,25 @@ export async function getCompetitions(userId: string): Promise<{
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
     }
+  }
+}
+
+export async function updateCompetitionName(
+  userId: string,
+  competitionId: string,
+  competitionName: string
+) {
+  if (!userId) throw new Error('UserID not provided.')
+
+  try {
+    const competitionRef = doc(db, 'competitions', competitionId)
+
+    await updateDoc(competitionRef, {
+      name: competitionName,
+    })
+    return { success: true, message: 'Competition name updated.' }
+  } catch (error) {
+    console.error('Error occured on updateCompetitionName: ', error)
+    throw error
   }
 }
