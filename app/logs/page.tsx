@@ -3,10 +3,11 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
+import Loading from '@/app/components/Loading'
 import { PoopLog } from '@/app/lib/types'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
-import { getPoopLogs } from './actions'
+import { getPoopLogs, deletePoopLog } from '@/app/logs/actions'
 import { format, getYear } from 'date-fns'
 
 export default function Logs() {
@@ -90,9 +91,42 @@ export default function Logs() {
     setFilteredPoopLogs(filteredLogs)
   }, [selectedMonth, selectedYear, poopLogs])
 
+  const handleDeletePoopLog = async (poopLogId: string | undefined) => {
+    if (!user || !poopLogId) return
+    const userId = user.uid
+
+    try {
+      setDataLoading(true)
+
+      const resDelete = await deletePoopLog(userId, poopLogId)
+
+      if (!resDelete.success) {
+        setError("Couldn't delete the poop log.")
+      } else {
+        setPoopLogs((prevLogs) => {
+          return prevLogs
+            ? prevLogs.filter((log) => log.id !== poopLogId)
+            : null
+        })
+        setFilteredPoopLogs((prevLogs) => {
+          return prevLogs
+            ? prevLogs.filter((log) => log.id !== poopLogId)
+            : null
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      setError('Error deleting poop log.')
+    } finally {
+      setDataLoading(false)
+    }
+  }
+
   if (error) {
     return <h1 className='text-2xl'>{error}</h1>
   }
+
+  if (dataLoading) return <Loading />
 
   return (
     <main className='p-6 pb-[80px] min-h-screen'>
@@ -186,7 +220,7 @@ export default function Logs() {
                     <Link href={`/logs/edit/${poopLog.id}`}>
                       <Pencil className='h-5 w-5' />
                     </Link>
-                    <button>
+                    <button onClick={() => handleDeletePoopLog(poopLog.id)}>
                       <Trash2 className='h-5 w-5' />
                     </button>
                   </td>
