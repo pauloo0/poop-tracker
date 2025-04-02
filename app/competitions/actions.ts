@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   getDocs,
+  getDoc,
   query,
   updateDoc,
   where,
@@ -138,6 +139,49 @@ export async function updateCompetitionName(
     return { success: true, message: 'Competition name updated.' }
   } catch (error) {
     console.error('Error occured on updateCompetitionName: ', error)
+    throw error
+  }
+}
+
+export async function removeCompetitionMember(
+  userId: string,
+  competitionId: string,
+  memberId: string
+) {
+  if (!userId || !competitionId || !memberId)
+    throw new Error("Couldn't get member data.")
+
+  try {
+    const competitionRef = doc(db, 'competitions', competitionId)
+    const competitionSnap = await getDoc(competitionRef)
+
+    if (!competitionSnap.exists()) {
+      throw new Error('Competition not found.')
+    }
+
+    const competitionData = competitionSnap.data() as Competition
+    if (competitionData.createdBy !== userId) {
+      throw new Error('Unauthorized!')
+    }
+
+    const memberExists = competitionData.members.find(
+      (member) => member.id === memberId
+    )
+    if (!memberExists) {
+      throw new Error("This member doesn't exist.")
+    }
+
+    const updatedMembers = competitionData.members.filter(
+      (member) => member.id !== memberId
+    )
+
+    await updateDoc(competitionRef, {
+      members: updatedMembers,
+    })
+
+    return { success: true, message: 'Member was removed successfully.' }
+  } catch (error) {
+    console.error('Error occured on removeCompetitionMember: ', error)
     throw error
   }
 }

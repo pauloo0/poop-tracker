@@ -11,6 +11,7 @@ import { Competition } from '@/app/lib/types'
 import {
   getCompetitions,
   updateCompetitionName,
+  removeCompetitionMember,
 } from '@/app/competitions/actions'
 
 export default function Competitions() {
@@ -117,7 +118,36 @@ export default function Competitions() {
   }
 
   const handleRemoveMember = async (memberId: string) => {
-    if (!competitionId || !memberId) return
+    if (!competitionId || !memberId || !user) return
+    const userId = user.uid
+
+    try {
+      setDataLoading(true)
+
+      const resUpdate = await removeCompetitionMember(
+        userId,
+        competitionId,
+        memberId
+      )
+
+      if (!resUpdate.success) {
+        setError("Couldn't remove this member.")
+      } else {
+        setSelectedCompetition((prev) => {
+          if (!prev) return null
+
+          const newMembers = prev.members.filter(
+            (member) => member.id !== memberId
+          )
+          return { ...prev, members: newMembers }
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      setError('Error removing member.')
+    } finally {
+      setDataLoading(false)
+    }
 
     console.log(
       'Remove member id: ' + memberId + ' from competition: ' + competitionId
