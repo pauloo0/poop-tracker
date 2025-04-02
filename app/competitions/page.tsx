@@ -1,6 +1,6 @@
 'use client'
 
-import { Pencil, Plus } from 'lucide-react'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import Loading from '@/app/components/Loading'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -32,6 +32,8 @@ export default function Competitions() {
   const [canEditCompetition, setCanEditCompetition] = useState<boolean>(false)
   const [isEditingCompetitionName, setIsEditingCompetitionName] =
     useState(false)
+  const [showCompetitionMembers, setShowCompetitionMembers] =
+    useState<boolean>(false)
 
   useEffect(() => {
     if (!user) return
@@ -68,6 +70,12 @@ export default function Competitions() {
       setCompetitionName(selectedCompetition.name)
     }
   }, [user, competitions, competitionId])
+
+  const handleShowMembers = () => {
+    if (!competitionId) return
+
+    setShowCompetitionMembers(!showCompetitionMembers)
+  }
 
   const handleCompetitionEdit = async (competitionId: string) => {
     if (!user || !competitionId) return
@@ -106,6 +114,14 @@ export default function Competitions() {
     } finally {
       setDataLoading(false)
     }
+  }
+
+  const handleRemoveMember = async (memberId: string) => {
+    if (!competitionId || !memberId) return
+
+    console.log(
+      'Remove member id: ' + memberId + ' from competition: ' + competitionId
+    )
   }
 
   if (dataLoading) return <Loading />
@@ -177,62 +193,122 @@ export default function Competitions() {
                 </div>
               </div>
             ) : (
-              <>
-                <h2 className='text-2xl'>{competitionName}</h2>
-                {canEditCompetition && (
-                  <button onClick={() => setIsEditingCompetitionName(true)}>
-                    <Pencil className='w-4 h-4' />
-                  </button>
-                )}
-              </>
+              <div className='flex flex-col sm:flex-row w-full sm:items-center justify-center sm:justify-start gap-4 mb-4'>
+                <div className='flex flex-row items-center justify-center gap-4'>
+                  <h2 className='text-2xl'>{competitionName}</h2>
+                  {canEditCompetition && (
+                    <button onClick={() => setIsEditingCompetitionName(true)}>
+                      <Pencil className='w-4 h-4' />
+                    </button>
+                  )}
+                </div>
+                <button
+                  className='bg-primary px-4 py-2 rounded-md'
+                  onClick={() => handleShowMembers()}
+                >
+                  {showCompetitionMembers ? 'Hide' : 'Show'} Members
+                </button>
+              </div>
             )}
           </div>
-          <div className='overflow-x-auto'>
-            <table className='w-full border-collapse rounded-lg shadow-md'>
-              <thead>
-                <tr className='text-lg text-foreground'>
-                  <th className='w-1/6 p-3 font-semibold text-left'>Rank</th>
-                  <th className='w-3/6 p-3 font-semibold text-left'>Name</th>
-                  <th className='w-2/6 p-3 font-semibold text-right'>Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedCompetition &&
-                selectedCompetition.members.length > 0 ? (
-                  selectedCompetition.members
-                    .sort((a, b) => (b.score || 0) - (a.score || 0))
-                    .map((member, idx) => (
-                      <tr
-                        key={idx}
-                        className={`${
-                          idx === 0
-                            ? 'text-2xl'
-                            : idx === 1
-                            ? 'text-xl'
-                            : idx === 2
-                            ? 'text-lg'
-                            : 'text-base'
-                        } border-b border-b-orange-200 border-opacity-20`}
-                      >
-                        <td className='p-3 text-left'>{idx + 1}</td>
-                        <td className='p-3 text-left'>
-                          {member.fullname || 'Unknown User'}
-                        </td>
-                        <td className='p-3 text-right'>
-                          {member.score || '0'}
-                        </td>
-                      </tr>
-                    ))
-                ) : (
-                  <tr>
-                    <td colSpan={3} className='p-3 text-center'>
-                      No members in this competition
-                    </td>
+
+          {!showCompetitionMembers ? (
+            <div className='overflow-x-auto'>
+              <table className='w-full border-collapse rounded-lg shadow-md'>
+                <thead>
+                  <tr className='text-lg text-foreground'>
+                    <th className='w-1/6 p-3 font-semibold text-left'>Rank</th>
+                    <th className='w-3/6 p-3 font-semibold text-left'>Name</th>
+                    <th className='w-2/6 p-3 font-semibold text-right'>
+                      Score
+                    </th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {selectedCompetition &&
+                  selectedCompetition.members.length > 0 ? (
+                    selectedCompetition.members
+                      .sort((a, b) => (b.score || 0) - (a.score || 0))
+                      .map((member, idx) => (
+                        <tr
+                          key={idx}
+                          className={`${
+                            idx === 0
+                              ? 'text-2xl'
+                              : idx === 1
+                              ? 'text-xl'
+                              : idx === 2
+                              ? 'text-lg'
+                              : 'text-base'
+                          } border-b border-b-orange-200 border-opacity-20`}
+                        >
+                          <td className='p-3 text-left'>{idx + 1}</td>
+                          <td className='p-3 text-left'>
+                            {member.fullname || 'Unknown User'}
+                          </td>
+                          <td className='p-3 text-right'>
+                            {member.score || '0'}
+                          </td>
+                        </tr>
+                      ))
+                  ) : (
+                    <tr>
+                      <td colSpan={3} className='p-3 text-center'>
+                        No members in this competition
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className='overflow-x-auto'>
+              <table className='w-full border-collapse rounded-lg shadow-md'>
+                <thead>
+                  <tr className='text-lg text-foreground'>
+                    <th className='w-2/3 p-3 font-semibold text-left'>Name</th>
+                    {canEditCompetition && (
+                      <th className='w-1/3 p-3 font-semibold text-right'>
+                        Actions
+                      </th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedCompetition &&
+                  selectedCompetition.members.length > 0 ? (
+                    selectedCompetition.members
+                      .sort((a, b) => (b.score || 0) - (a.score || 0))
+                      .map((member, idx) => (
+                        <tr
+                          key={idx}
+                          className='border-b border-b-orange-200 border-opacity-20 text-lg'
+                        >
+                          <td className='p-3 text-left'>
+                            {member.fullname || 'Unknown User'}
+                          </td>
+                          {canEditCompetition && (
+                            <td className='p-3 flex items-center justify-end'>
+                              <button
+                                onClick={() => handleRemoveMember(member.id)}
+                              >
+                                <Trash2 className='w-5 h-5' />
+                              </button>
+                            </td>
+                          )}
+                        </tr>
+                      ))
+                  ) : (
+                    <tr>
+                      <td colSpan={3} className='p-3 text-center'>
+                        No members in this competition
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       ) : (
         <p>No competition selected or available</p>
