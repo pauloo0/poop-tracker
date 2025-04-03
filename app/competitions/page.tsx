@@ -153,10 +153,6 @@ export default function Competitions() {
     } finally {
       setDataLoading(false)
     }
-
-    console.log(
-      'Remove member id: ' + memberId + ' from competition: ' + competitionId
-    )
   }
 
   const handleInviteMembers = async (competitionId: string) => {
