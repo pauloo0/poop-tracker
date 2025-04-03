@@ -8,9 +8,12 @@ import {
   query,
   updateDoc,
   where,
+  setDoc,
 } from 'firebase/firestore'
 import { db } from '@/app/lib/firebase'
 import { Competition, User } from '@/app/lib/types'
+import { generateRandomString } from '@/app/lib/utils'
+import { format } from 'date-fns'
 
 export async function getCompetitions(userId: string): Promise<{
   success: boolean
@@ -182,6 +185,30 @@ export async function removeCompetitionMember(
     return { success: true, message: 'Member was removed successfully.' }
   } catch (error) {
     console.error('Error occured on removeCompetitionMember: ', error)
+    throw error
+  }
+}
+
+export async function createInvitation(userId: string, competitionId: string) {
+  if (!userId || !competitionId) throw new Error("Couldn't get member data.")
+
+  const token = generateRandomString(20)
+  const inviteLink = `https://localhost:3000/invitations/${token}`
+
+  const newInvitation = {
+    competitionId: competitionId,
+    token: token,
+    date: format(new Date(), 'yyyy-MM-dd'),
+    expirationSeconds: 900,
+  }
+
+  try {
+    const invitationRef = doc(collection(db, 'invitations'))
+    await setDoc(invitationRef, newInvitation)
+
+    return { success: true, link: inviteLink }
+  } catch (error) {
+    console.error('Error occured on createInvitation: ', error)
     throw error
   }
 }

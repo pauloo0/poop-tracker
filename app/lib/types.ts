@@ -33,6 +33,14 @@ export interface Competition {
   winner?: string
 }
 
+export interface Invitation {
+  id?: string
+  competitionId: string
+  token: string
+  date: string
+  expirationSeconds: number
+}
+
 export interface RegisterFormErrors {
   firstname?: string[]
   lastname?: string[]
