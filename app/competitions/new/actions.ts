@@ -15,7 +15,7 @@ export async function createCompetition(formData: FormData, userId: string) {
   const newCompetition = {
     name: formData.get('name') as string,
     createdBy: userId,
-    members: [userId], // creates the competition only with the only member being creator
+    members: [{ id: userId }], // creates the competition only with the only member being creator
     startDate: firstDayOfYear,
     endDate: lastDayOfYear,
     ended: false,
