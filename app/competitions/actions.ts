@@ -198,7 +198,7 @@ export async function createInvitation(userId: string, competitionId: string) {
   const newInvitation = {
     competitionId: competitionId,
     token: token,
-    date: format(new Date(), 'yyyy-MM-dd'),
+    date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
     expirationSeconds: 900,
   }
 
