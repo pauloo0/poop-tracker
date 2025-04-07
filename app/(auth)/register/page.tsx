@@ -46,6 +46,9 @@ export default function Register() {
   const [isPending, startTransition] = useTransition()
   const [errors, setErrors] = useState<RegisterFormErrors | null>(null)
 
+  const competitionInvitationLink: string | null =
+    sessionStorage.getItem('invitationLink')
+
   const handleEmailSubmit = (formData: FormData) => {
     startTransition(async () => {
       try {
@@ -55,7 +58,13 @@ export default function Register() {
           setErrors(result.errors as RegisterFormErrors)
         } else {
           setErrors(null)
-          router.push('/dashboard')
+
+          if (competitionInvitationLink) {
+            sessionStorage.removeItem('invitationLink')
+          }
+          router.push(
+            competitionInvitationLink ? competitionInvitationLink : '/dashboard'
+          )
         }
       } catch (error) {
         setErrors({
@@ -73,7 +82,13 @@ export default function Register() {
     startTransition(async () => {
       try {
         await createUserGoogle()
-        router.push('/dashboard')
+
+        if (competitionInvitationLink) {
+          sessionStorage.removeItem('invitationLink')
+        }
+        router.push(
+          competitionInvitationLink ? competitionInvitationLink : '/dashboard'
+        )
       } catch (error) {
         setErrors({
           general: [

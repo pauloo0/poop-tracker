@@ -34,11 +34,20 @@ export default function Login() {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
+  const competitionInvitationLink: string | null =
+    sessionStorage.getItem('invitationLink')
+
   const handleEmailSubmit = (formData: FormData) => {
     startTransition(async () => {
       try {
         await loginUserEmailPassword(formData)
-        router.push('/dashboard')
+
+        if (competitionInvitationLink) {
+          sessionStorage.removeItem('invitationLink')
+        }
+        router.push(
+          competitionInvitationLink ? competitionInvitationLink : '/dashboard'
+        )
       } catch (error) {
         setError(
           error instanceof Error
@@ -53,7 +62,13 @@ export default function Login() {
     startTransition(async () => {
       try {
         await loginUserGoogle()
-        router.push('/dashboard')
+
+        if (competitionInvitationLink) {
+          sessionStorage.removeItem('invitationLink')
+        }
+        router.push(
+          competitionInvitationLink ? competitionInvitationLink : '/dashboard'
+        )
       } catch (error) {
         setError(
           error instanceof Error
