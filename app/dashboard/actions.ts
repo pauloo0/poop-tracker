@@ -161,7 +161,7 @@ export async function getDashboardData(userId: string) {
 
     if (poopLogs.length === 0) {
       return {
-        success: false,
+        success: true,
         data: {
           monthlyPoops: 0,
           yearlyPoops: 0,
@@ -192,6 +192,12 @@ export async function getDashboardData(userId: string) {
     }
   } catch (error) {
     console.error('Error on getCurrentStreak: ', error)
-    throw error
+
+    return {
+      success: false,
+      data: {
+        error: error,
+      },
+    }
   }
 }

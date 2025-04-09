@@ -40,15 +40,15 @@ export default function Dashboard() {
         const resDashboard = await getDashboardData(user.uid)
         const { success, data } = resDashboard
 
-        if (!success) throw new Error('Error fetching dashboardData')
+        if (!success && data.error) throw new Error('Error fetching poop logs')
 
-        setMonthlyPoops(data.monthlyPoops)
-        setYearlyPoops(data.yearlyPoops)
-        setDailyRecord(data.dailyRecord)
-        setDailyRecordDate(data.dailyRecordDate)
-        setCurrentStreak(data.currentStreak)
-        setHighestStreak(data.highestStreak)
-        setHighestStreakDate(data.highestStreakDate)
+        setMonthlyPoops(data.monthlyPoops || 0)
+        setYearlyPoops(data.yearlyPoops || 0)
+        setDailyRecord(data.dailyRecord || 0)
+        setDailyRecordDate(data.dailyRecordDate || '')
+        setCurrentStreak(data.currentStreak || 0)
+        setHighestStreak(data.highestStreak || 0)
+        setHighestStreakDate(data.highestStreakDate || '')
 
         setDataLoading(false)
       } catch (error) {
