@@ -5,14 +5,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
-import { createUserEmailPassword } from './actions'
-import { signInWithPopup } from 'firebase/auth'
+import { signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/app/lib/firebase'
 import { googleProvider } from '@/app/lib/firebase'
 import { completeUserRegistration } from './actions'
 import { RegisterFormErrors } from '@/app/lib/types'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
+import { newUserSchema } from '@/app/lib/zod'
+import { z } from 'zod'
 
 async function createUserGoogle() {
   try {
@@ -29,6 +30,44 @@ async function createUserGoogle() {
 
     await completeUserRegistration(userData)
   } catch (error) {
+    throw error
+  }
+}
+
+async function createUserEmailPassword(formData: FormData) {
+  const newUser = {
+    firstname: formData.get('firstname') as string,
+    lastname: formData.get('lastname') as string,
+    email: formData.get('email') as string,
+    password: formData.get('password') as string,
+    confirm_password: formData.get('confirm_password') as string,
+  }
+
+  try {
+    const validatedData = newUserSchema.parse(newUser)
+
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      validatedData.email,
+      validatedData.password
+    )
+    const user = userCredential.user
+
+    const userData = {
+      id: user.uid,
+      email: user.email || '',
+      firstname: newUser.firstname,
+      lastname: newUser.lastname,
+      createdAt: new Date().toISOString(),
+    }
+
+    await completeUserRegistration(userData)
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { errors: error.flatten().fieldErrors }
+    }
+
+    console.error('Error in createUserEmailPassword: ', error)
     throw error
   }
 }
