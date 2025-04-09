@@ -4,19 +4,36 @@ import Form from 'next/form'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useTransition, useState } from 'react'
+import { useTransition, useState, useEffect } from 'react'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 
 import { auth, googleProvider } from '@/app/lib/firebase'
-import { loginUserEmailPassword } from './actions'
-import { signInWithPopup } from 'firebase/auth'
+import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
 
 async function loginUserGoogle() {
   try {
     await signInWithPopup(auth, googleProvider)
   } catch (error) {
     console.error('Google Login error: ', error)
+    throw error
+  }
+}
+
+async function loginUserEmailPassword(formData: FormData) {
+  const loggedUser = {
+    email: formData.get('email') as string,
+    password: formData.get('password') as string,
+  }
+
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      loggedUser.email,
+      loggedUser.password
+    )
+  } catch (error) {
+    console.error('Email/Password Login error: ', error)
     throw error
   }
 }
@@ -33,9 +50,13 @@ export default function Login() {
 
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [competitionInvitationLink, setCompetitionInvitationLink] = useState<
+    string | null
+  >(null)
 
-  const competitionInvitationLink: string | null =
-    sessionStorage.getItem('invitationLink')
+  useEffect(() => {
+    setCompetitionInvitationLink(sessionStorage.getItem('invitationLink'))
+  }, [])
 
   const handleEmailSubmit = (formData: FormData) => {
     startTransition(async () => {
