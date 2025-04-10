@@ -3,7 +3,6 @@
 import Form from 'next/form'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/app/lib/firebase'
@@ -80,13 +79,8 @@ export default function Register() {
   const { loading: authLoading, user } = useAuthState()
   useAuthRedirect({ loading: authLoading, user })
 
-  const router = useRouter()
-
   const [isPending, startTransition] = useTransition()
   const [errors, setErrors] = useState<RegisterFormErrors | null>(null)
-
-  const competitionInvitationLink: string | null =
-    sessionStorage.getItem('invitationLink')
 
   const handleEmailSubmit = (formData: FormData) => {
     startTransition(async () => {
@@ -97,13 +91,6 @@ export default function Register() {
           setErrors(result.errors as RegisterFormErrors)
         } else {
           setErrors(null)
-
-          if (competitionInvitationLink) {
-            sessionStorage.removeItem('invitationLink')
-          }
-          router.push(
-            competitionInvitationLink ? competitionInvitationLink : '/dashboard'
-          )
         }
       } catch (error) {
         setErrors({
@@ -121,13 +108,6 @@ export default function Register() {
     startTransition(async () => {
       try {
         await createUserGoogle()
-
-        if (competitionInvitationLink) {
-          sessionStorage.removeItem('invitationLink')
-        }
-        router.push(
-          competitionInvitationLink ? competitionInvitationLink : '/dashboard'
-        )
       } catch (error) {
         setErrors({
           general: [

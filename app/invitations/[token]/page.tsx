@@ -27,6 +27,10 @@ function Invitations({ params }: { params: Promise<{ token: string }> }) {
         throw new Error("Couldn't add user to competition")
       }
 
+      const invitationLink = sessionStorage.getItem('invitationLink')
+      if (invitationLink) {
+        sessionStorage.removeItem('invitationLink')
+      }
       router.push(`/competitions?competition=${data.competitionId}`)
     } catch (error) {
       console.error('Error adding user to competition', error)

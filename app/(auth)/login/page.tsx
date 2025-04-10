@@ -3,8 +3,7 @@
 import Form from 'next/form'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { useTransition, useState, useEffect } from 'react'
+import { useTransition, useState } from 'react'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 
@@ -46,29 +45,13 @@ export default function Login() {
   const { loading: authLoading, user } = useAuthState()
   useAuthRedirect({ loading: authLoading, user })
 
-  const router = useRouter()
-
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
-  const [competitionInvitationLink, setCompetitionInvitationLink] = useState<
-    string | null
-  >(null)
-
-  useEffect(() => {
-    setCompetitionInvitationLink(sessionStorage.getItem('invitationLink'))
-  }, [])
 
   const handleEmailSubmit = (formData: FormData) => {
     startTransition(async () => {
       try {
         await loginUserEmailPassword(formData)
-
-        if (competitionInvitationLink) {
-          sessionStorage.removeItem('invitationLink')
-        }
-        router.push(
-          competitionInvitationLink ? competitionInvitationLink : '/dashboard'
-        )
       } catch (error) {
         setError(
           error instanceof Error
@@ -83,13 +66,6 @@ export default function Login() {
     startTransition(async () => {
       try {
         await loginUserGoogle()
-
-        if (competitionInvitationLink) {
-          sessionStorage.removeItem('invitationLink')
-        }
-        router.push(
-          competitionInvitationLink ? competitionInvitationLink : '/dashboard'
-        )
       } catch (error) {
         setError(
           error instanceof Error
