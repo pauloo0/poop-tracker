@@ -254,17 +254,21 @@ export default function Competitions() {
                   <div className='flex flex-row items-center justify-center gap-4'>
                     <h2 className='text-2xl'>{competitionName}</h2>
                     {canEditCompetition && (
-                      <button onClick={() => setIsEditingCompetitionName(true)}>
-                        <Pencil className='w-4 h-4' />
-                      </button>
+                      <>
+                        <button
+                          onClick={() => setIsEditingCompetitionName(true)}
+                        >
+                          <Pencil className='w-4 h-4' />
+                        </button>
+                        <button
+                          className='bg-primary px-4 py-2 rounded-md'
+                          onClick={() => handleShowMembers()}
+                        >
+                          {showCompetitionMembers ? 'Hide' : 'Show'} Members
+                        </button>
+                      </>
                     )}
                   </div>
-                  <button
-                    className='bg-primary px-4 py-2 rounded-md'
-                    onClick={() => handleShowMembers()}
-                  >
-                    {showCompetitionMembers ? 'Hide' : 'Show'} Members
-                  </button>
                 </div>
               )}
             </div>
