@@ -61,7 +61,7 @@ export default function Competitions() {
     }
 
     fetchCompetition()
-  }, [user, competitionId])
+  }, [user])
 
   useEffect(() => {
     if (!user || !competitions) return
