@@ -23,7 +23,7 @@ function ModalPopUp({ title, message, isOpen, onClose }: ModalProps) {
   }, [isOpen])
 
   const copyText = () => {
-    //TODO Copy message to clipboard
+    navigator.clipboard.writeText(message)
     setTextCopied(true)
   }
 
