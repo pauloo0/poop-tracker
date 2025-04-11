@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Loading from '@/app/components/Loading'
 import ModalPopUp from '@/app/components/ModalPopUp'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useAuthState } from '@/app/hooks/useAuthState'
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect'
 import { Competition } from '@/app/lib/types'
@@ -16,7 +16,7 @@ import {
   createInvitation,
 } from '@/app/competitions/actions'
 
-export default function Competitions() {
+function CompetitionContent() {
   const { loading: authLoading, user } = useAuthState()
   useAuthRedirect({ loading: authLoading, user })
 
@@ -395,5 +395,13 @@ export default function Competitions() {
         )}
       </main>
     </>
+  )
+}
+
+export default function Competitions() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <CompetitionContent />
+    </Suspense>
   )
 }

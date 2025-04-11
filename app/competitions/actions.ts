@@ -193,7 +193,7 @@ export async function createInvitation(userId: string, competitionId: string) {
   if (!userId || !competitionId) throw new Error("Couldn't get member data.")
 
   const token = generateRandomString(20)
-  const inviteLink = `https://localhost:3000/invitations/${token}`
+  const inviteLink = `https://poop-tracker.powlu.dev/invitations/${token}`
 
   const newInvitation = {
     competitionId: competitionId,

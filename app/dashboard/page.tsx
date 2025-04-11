@@ -66,7 +66,7 @@ export default function Dashboard() {
 
         if (!success) throw new Error('Error fetching userData')
 
-        setUserFullname(data.fullname)
+        setUserFullname(data.firstname + ' ' + data.lastname)
       } catch (error) {
         console.error(error)
         setError('Error fetching user info')
