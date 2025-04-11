@@ -50,6 +50,12 @@ export interface RegisterFormErrors {
   general?: string[]
 }
 
+export interface UserUpdateErrors {
+  firstname?: string[]
+  lastname?: string[]
+  general?: string[]
+}
+
 export interface PoopLogFormErrors {
   date?: string[]
   time?: string[]
