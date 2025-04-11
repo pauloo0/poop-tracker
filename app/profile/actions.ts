@@ -18,7 +18,6 @@ export async function getUserData(userId: string) {
       email: docData.email,
       firstname: docData.firstname,
       lastname: docData.lastname,
-      fullname: `${docData.firstname} ${docData.lastname}`,
     }
 
     return { success: true, data: userData }

@@ -3,7 +3,7 @@ export interface User {
   email: string
   firstname: string
   lastname: string
-  createdAt: string
+  createdAt?: string
 }
 
 export interface PoopLog {
