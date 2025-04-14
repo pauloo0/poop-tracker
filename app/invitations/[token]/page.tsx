@@ -15,32 +15,32 @@ function Invitations({ params }: { params: Promise<{ token: string }> }) {
   const [dataLoading, setDataLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const addUserToCompetition = async (
-    token: string,
-    userId: string
-  ): Promise<void> => {
-    try {
-      const res = await addUser(token, userId)
-      const { success, data } = res
-
-      if (!success || !data || !data.competitionId) {
-        throw new Error("Couldn't add user to competition")
-      }
-
-      const invitationLink = sessionStorage.getItem('invitationLink')
-      if (invitationLink) {
-        sessionStorage.removeItem('invitationLink')
-      }
-      router.push(`/competitions?competition=${data.competitionId}`)
-    } catch (error) {
-      console.error('Error adding user to competition', error)
-      setError(`Couldn't add you to the competition: ${error}`)
-    } finally {
-      setDataLoading(false)
-    }
-  }
-
   useEffect(() => {
+    const addUserToCompetition = async (
+      token: string,
+      userId: string
+    ): Promise<void> => {
+      try {
+        const res = await addUser(token, userId)
+        const { success, data } = res
+
+        if (!success || !data || !data.competitionId) {
+          throw new Error("Couldn't add user to competition")
+        }
+
+        const invitationLink = sessionStorage.getItem('invitationLink')
+        if (invitationLink) {
+          sessionStorage.removeItem('invitationLink')
+        }
+        router.push(`/competitions?competition=${data.competitionId}`)
+      } catch (error) {
+        console.error('Error adding user to competition', error)
+        setError(`Couldn't add you to the competition: ${error}`)
+      } finally {
+        setDataLoading(false)
+      }
+    }
+
     const handleUserAction = async () => {
       if (!user) {
         console.log(pathname)
