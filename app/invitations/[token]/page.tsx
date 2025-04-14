@@ -24,6 +24,10 @@ function Invitations({ params }: { params: Promise<{ token: string }> }) {
         const res = await addUser(token, userId)
         const { success, data } = res
 
+        if (!success && data.error) {
+          throw new Error(data.error)
+        }
+
         if (!success || !data || !data.competitionId) {
           throw new Error("Couldn't add user to competition")
         }
@@ -60,7 +64,11 @@ function Invitations({ params }: { params: Promise<{ token: string }> }) {
     return <Loading />
   }
 
-  return <div>{error}</div>
+  return (
+    <div className='w-full h-screen flex flex-col items-center justify-center'>
+      {error}
+    </div>
+  )
 }
 
 export default Invitations

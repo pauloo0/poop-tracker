@@ -37,7 +37,12 @@ export async function addUser(token: string, userId: string) {
 
     // Check if the invitation is expired
     if (currentDate > expirationDate) {
-      throw new Error('Invitation has expired.')
+      return {
+        success: false,
+        data: {
+          error: 'Invitation has expired.',
+        },
+      }
     }
 
     // Get the competition document
@@ -45,7 +50,12 @@ export async function addUser(token: string, userId: string) {
     const competitionDoc = await getDoc(competitionRef)
 
     if (!competitionDoc.exists()) {
-      throw new Error('Competition not found.')
+      return {
+        success: false,
+        data: {
+          error: 'Competition not found.',
+        },
+      }
     }
 
     const competitionData = competitionDoc.data() as Competition
@@ -54,7 +64,10 @@ export async function addUser(token: string, userId: string) {
     // Check if the user is already a member
     const isMember = competitionMembers.find((member) => member.id === userId)
     if (isMember) {
-      throw new Error('User is already a member of the competition.')
+      return {
+        success: false,
+        data: { error: 'User is already a member of the competition.' },
+      }
     }
 
     // Add the user to the competition
@@ -69,7 +82,11 @@ export async function addUser(token: string, userId: string) {
       data: { competitionId: competitionId },
     }
   } catch (error) {
-    console.error('Error on invitationsAddUser', error)
-    throw error
+    return {
+      success: false,
+      data: {
+        error: 'Error on invitationsAddUser: , ' + error,
+      },
+    }
   }
 }
